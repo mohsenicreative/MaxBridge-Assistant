@@ -1,0 +1,3 @@
+PySide6==6.11.1
+Requests==2.34.2
+nuitka==4.1.3

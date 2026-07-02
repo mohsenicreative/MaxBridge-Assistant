@@ -528,11 +528,20 @@ class MaxBridgeAssistant(QWidget):
                 try:
                     lang_path.mkdir(parents=True, exist_ok=True)
 
-                    # File content
-                    file_content = (
-                        f"python.Execute \"filePath = u'{self.megascans_library}/support/plugins/max/{self.plugin_version}/MSLiveLink/MS_API.py'; "
-                        "exec(open(filePath).read(), {'__file__': filePath})\""
-                    )
+                    # Build the target path using standard backslashes for the MAXScript string literal
+                    target_script_path = os.path.join(
+                        self.megascans_library,
+                        "support",
+                        "plugins",
+                        "max",
+                        self.plugin_version,
+                        "MSLiveLink",
+                        "MS_API.py",
+                    ).replace("/", "\\")
+
+                    # Modernized 3ds Max Cross-Version Macro Content
+                    # Uses the native Max python.ExecuteFile utility which handles namespaces flawlessly
+                    file_content = f'python.ExecuteFile @"{target_script_path}"'
 
                     file_path = lang_path / "Quixel.ms"
                     file_path.write_text(file_content, encoding="utf-8")
